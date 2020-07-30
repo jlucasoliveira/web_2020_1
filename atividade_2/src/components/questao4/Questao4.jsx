@@ -12,7 +12,7 @@ const Hero = ({name, image}) => {
 };
 
 const Enemy = ({name, image}) => {
-    // Insira sua discução filosófica aqui
+    // Insira sua discussão filosófica aqui
     return <Hero name={name} image={image}/>
 };
 
