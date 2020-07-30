@@ -2,29 +2,27 @@ import React from 'react';
 import aang from './aang.jpg';
 import ozai from './ozai.gif';
 
-const Hero = ({name, image}) => {
+const Hero = ({name, image, arena}) => {
     return (
         <div style={{margin:20}}>
             <img src={image} alt={`pic of ${name}`} width="140"/><br/>
             <span>{name}</span>
+            <span>{arena}</span>
         </div>
     );
 };
 
-const Enemy = ({name, image}) => {
+const Enemy = ({name, image, arena}) => {
     // Insira sua discussão filosófica aqui
-    return <Hero name={name} image={image}/>
+    return <Hero name={name} image={image} arena={arena}/>
 };
 
 const Arena = (props) => {
     return (
         <div style={{display: 'inline-block'}}>
-            <fieldset>
-                <legend>Arena: {props.arena}</legend>
-                {React.Children.map(props.children, personagem => {
-                    return React.cloneElement(personagem, {...props})
-                })}
-            </fieldset>
+            {React.Children.map(props.children, personagem => {
+                return React.cloneElement(personagem, {...props})
+            })}
         </div>
     );
 };
