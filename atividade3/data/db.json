@@ -1,0 +1,16 @@
+{
+  "disciplinas": [
+    {
+      "id": 1,
+      "nome": "Desenvolvimento para WEB",
+      "curso": "ES",
+      "capacidade": 50
+    },
+    {
+      "id": 2,
+      "nome": "Computação Gráfica",
+      "curso": "CC",
+      "capacidade": 35
+    }
+  ]
+}
