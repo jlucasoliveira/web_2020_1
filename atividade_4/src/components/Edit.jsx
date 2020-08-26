@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import Axios from 'axios';
+import API from '../utils/api';
 
 export default ({match:{params:{id}}, history}) => {
   const [disciplina, setDisciplina] = useState(
@@ -9,8 +9,16 @@ export default ({match:{params:{id}}, history}) => {
   useEffect(() => {
     const loadDisciplina = async () => {
       try {
-        const data = (await Axios.get(`http://localhost:3001/disciplinas/${id}`)).data;
-        if (!data) return;
+        const data = (await API.get(`/disciplinas/${id}`)).data;
+        
+        if (!data) {
+          const mesgErr = `id ${id} não encontrada!`;
+          alert(mesgErr);
+          console.warn(mesgErr);
+          history.push('/list');
+          return;
+        };
+
         setDisciplina(data);
       } catch (err) {console.error(err.message)}
     }
@@ -24,7 +32,7 @@ export default ({match:{params:{id}}, history}) => {
   const submitData = async (e) => {
     try {
       e.preventDefault();
-      await Axios.put(`http://localhost:3001/disciplinas/${id}`, disciplina);
+      await API.put(`/disciplinas/${id}`, disciplina);
       history.push('/list');
     } catch (err) {console.error(err);}
   }
@@ -56,4 +64,3 @@ export default ({match:{params:{id}}, history}) => {
     </>
   );
 }
-// onChange={({target:{value}}) => setDisciplina({...disciplina, nome: value})}

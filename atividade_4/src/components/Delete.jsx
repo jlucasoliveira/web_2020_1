@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Axios from 'axios';
+import API from '../utils/api';
 
 export default ({match:{params:{id}}, history}) => {
 
     const deleteDisciplina = async () => {
         try {
-            await Axios.delete(`http://localhost:3001/disciplinas/${id}`);
+            await API.delete(`/disciplinas/${id}`);
             history.push('/list');
         } catch(err) {console.error(err.message);}
     }

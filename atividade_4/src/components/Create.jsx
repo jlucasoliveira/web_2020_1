@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Axios from 'axios';
+import API from '../utils/api';
 
 export default ({history}) => {
   const [disciplina, setDisciplina] = useState(
@@ -13,7 +13,7 @@ export default ({history}) => {
   const onSubmit = async (event) => {
     event.preventDefault();
     try {
-      await Axios.post('http://localhost:3001/disciplinas', disciplina);
+      await API.post('/disciplinas', disciplina);
       history.push('/list');
     } catch (e) {console.error(e.message);}
   }

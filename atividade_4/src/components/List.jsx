@@ -1,17 +1,18 @@
 import React, {useState, useEffect} from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 
-const TableRow = ({id, nome, curso, capacidade}) => {
+import API from '../utils/api';
+
+const TableRow = ({_id, nome, curso, capacidade}) => {
   return (
     <>
       <tr>
-        <td style={{textAlign: 'center'}}>{id}</td>
+        <td style={{textAlign: 'center'}}>{_id}</td>
         <td>{nome}</td>
         <td style={{textAlign: 'center'}}>{curso}</td>
         <td style={{textAlign: 'center'}}>{capacidade}</td>
-        <td style={{textAlign: 'center'}}><Link to={`/edit/${id}`}>Editar</Link></td>
-        <td style={{textAlign: 'center'}}><Link to={`/delete/${id}`}>Excluir</Link></td>
+        <td style={{textAlign: 'center'}}><Link to={`/edit/${_id}`}>Editar</Link></td>
+        <td style={{textAlign: 'center'}}><Link to={`/delete/${_id}`}>Excluir</Link></td>
       </tr>
     </>
   );
@@ -22,7 +23,7 @@ export default () => {
 
   useEffect(() => {
     const loadDisciplinas = async () => {
-      const data = (await axios.get('http://localhost:3001/disciplinas')).data;
+      const data = (await API.get('/disciplinas')).data;
       if (!data) return;
       setDisciplinas(data);
     };
@@ -39,7 +40,8 @@ export default () => {
   
   return (
     <>
-      <h3>Lista de disciplinas</h3>
+      <span style={{fontSize: 24}}>Lista de disciplinas</span>
+      <Link style={{float:"right"}} to="/create">Adicionar</Link>
       <table className="table table-striped">
         <thead>
           <tr>
