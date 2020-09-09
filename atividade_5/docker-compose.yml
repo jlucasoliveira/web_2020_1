@@ -1,0 +1,32 @@
+version: '3'
+
+services: 
+    app:
+        build: .
+        container_name: api-express_atv8
+        ports: 
+            - "3002:3002"
+        volumes:
+            - .:/home/node/app
+        depends_on:
+            - db
+        networks:
+            - atividade_5_atv8_web_network
+    
+    db:
+        image: mongo
+        container_name: api-express_atv8_db
+        ports:
+            - "27017:27017"
+        volumes:
+            - express_api_atv8:/data/db
+        networks: 
+            - atividade_5_atv8_web_network
+
+volumes:
+    express_api_atv8:
+        external: true
+
+networks: 
+    atividade_5_atv8_web_network:
+        driver: bridge

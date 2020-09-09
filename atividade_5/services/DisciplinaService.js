@@ -1,48 +1,36 @@
 const { DisciplinaModel } = require("../models/DisciplinaModel");
 
-let _id = 0;
-let disciplinas = [];
-
 class DisciplinaService {
-    static register(data) {
-        const disciplina = new DisciplinaModel(
-            _id++,
-            data.nome, data.curso, data.capacidade
-        );
-
-        disciplinas.push(disciplina);
-        return disciplina;
+    static async register(data) {
+        try {
+            return await DisciplinaModel.create(data);
+        }catch( err ){console.error(err);}
     }
 
-    static update(_id, data) {
-        for (let d of disciplinas)
-            if (_id == d._id) {
-                d.nome = data.nome;
-                d.curso = data.curso;
-                d.capacidade = data.capacidade;
-                return d;
-            }
-        return null;
+    static async update(_id, data) {
+        try {
+            const disciplina = await DisciplinaModel.findOneAndUpdate(_id, data, {"new": true});
+            return disciplina?disciplina:null;
+        }catch(err) {console.error(err);}
     }
 
-    static delete(_id) {
-        for (let i = 0; i < disciplinas.length; i++)
-            if (disciplinas[i]._id == _id) {
-                disciplinas.splice(i,1);
-                return true;
-            }
-        return false;
+    static async delete(_id) {
+        try {
+            const disciplina = await DisciplinaModel.findOneAndDelete(_id)
+            return disciplina?true:false;
+        }catch(err){console.error(err);}
     }
 
-    static list() {
-        return disciplinas;
+    static async list() {
+        try {
+            return await DisciplinaModel.find();
+        }catch(err){console.error(err.message);}
     }
 
-    static retrieve(_id) {
-        for (let d of disciplinas) 
-            if (_id == d._id)
-                return d;
-        return null;
+    static async retrieve(_id) {
+        try{
+            return await DisciplinaModel.findById(_id);
+        }catch(err){console.error(err);}
     }
 }
 

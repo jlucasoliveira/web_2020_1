@@ -20,4 +20,6 @@ app.use((req, res, next) => {
 
 app.use('/api/v1/disciplinas', DisciplinaRouter.router);
 
+require("./mongo.config");
+
 module.exports = app;
