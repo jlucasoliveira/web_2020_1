@@ -1,4 +1,5 @@
-.idea/
-node_modules/
+*/.idea/
+*/node_modules/
 *-lock.*
 *.lock
+atividade_7/*
