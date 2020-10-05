@@ -1,23 +1,22 @@
 import React, {useState, useEffect} from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import TableRow from '../components/TableRow';
 import DisciplinaService from '../services/DisciplinaService';
 
-export default () => {
+const List = ({auth, history}) => {
   const [loading, setLoading] = useState(true);
   const [disciplinas, setDisciplinas] = useState([]);
 
   useEffect(() => {
+    if (auth.isLoaded && auth.isEmpty) {
+      history.push('/signin');
+      return;
+    }
     DisciplinaService.list((disciplinas) => {setDisciplinas(disciplinas); setLoading(false)});
-  }, []);
+  }, [history, auth]);
 
-  const montarLinhas = () => {
-    return disciplinas.map(
-      (disciplina, i) => {
-        return <TableRow key={i} {...disciplina}/>
-      }
-    );
-  }
+  const montarLinhas = () => disciplinas.map((disciplina, i) => <TableRow key={i} {...disciplina}/>);
   
   return (
     <>
@@ -41,3 +40,12 @@ export default () => {
     </>
   );
 }
+
+export default connect(
+  // map State to Props
+  (state) => ({
+    auth: state.firebaseReducer.auth,
+  }),
+  // map Dispatch to Props
+  (dispatch) => ({}) 
+)(List);

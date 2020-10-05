@@ -1,8 +1,9 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useEffect } from 'react';
+import { connect } from 'react-redux';
 import Input from '../components/Input';
 import DisciplinaService from '../services/DisciplinaService';
 
-export default ({history}) => {
+const Create = ({history, auth}) => {
   const nomeInputRef = useRef("");
   const cursoInputRef = useRef("");
   const capacidadeInputRef = useRef(0);
@@ -19,6 +20,9 @@ export default ({history}) => {
     });
   }, [history]);
 
+  useEffect(() => {
+    if (auth.isLoaded && auth.isEmpty) history.push('/signin');
+  }, [history, auth]);
 
   return (
     <>
@@ -34,3 +38,12 @@ export default ({history}) => {
     </>
   );
 }
+
+export default connect(
+  // map State to Props
+  (state) => ({
+    auth: state.firebaseReducer.auth
+  }),
+  // map Dispatch to Props
+  (dispatch) => ({})
+)(Create);
