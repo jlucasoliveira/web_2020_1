@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Input from '../components/Input';
 import DisciplinaService from '../services/DisciplinaService';
 
-const Create = ({history, auth}) => {
+const Create = ({history, auth, verified}) => {
   const nomeInputRef = useRef("");
   const cursoInputRef = useRef("");
   const capacidadeInputRef = useRef(0);
@@ -25,6 +25,7 @@ const Create = ({history, auth}) => {
   }, [history, auth]);
 
   return (
+    verified?
     <>
       <h3>Criar Disciplina</h3>
       <form onSubmit={submitCallBack}>
@@ -35,14 +36,18 @@ const Create = ({history, auth}) => {
           <input type="submit" className="btn btn-primary" value="Criar"/>
         </div>
       </form>
-    </>
+    </>:
+    <div className="alert alert-warning">
+      Para criar uma Disciplina você precisa verificar seu email!
+    </div>
   );
 }
 
 export default connect(
   // map State to Props
   (state) => ({
-    auth: state.firebaseReducer.auth
+    auth: state.firebaseReducer.auth,
+    ...state.AuthReducer
   }),
   // map Dispatch to Props
   (dispatch) => ({})
