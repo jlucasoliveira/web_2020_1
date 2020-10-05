@@ -1,38 +1,46 @@
-import React, {useRef, useCallback, useState} from 'react';
-import {connect} from 'react-redux';
+import React, {useState} from 'react';
+import {useFormik} from 'formik';
+import * as Yup from 'yup';
+
+import Button from '../components/Button';
 import Input from '../components/Input';
+
+import {connect} from 'react-redux';
 import {SignUp as SignUpAction} from '../store/actions/Auth';
 
 const SignUp = ({message, signUp}) => {
     const [warn, setWarn] = useState(false);
-    const [load, setLoad] = useState(false);
-    const emailRef = useRef("");
-    const passwordRef = useRef("");
 
-    const onSubmit = useCallback((e) => {
-        e.preventDefault();
-        setLoad(true);
-        
-        const email = emailRef.current?.value;
-        const password = passwordRef.current?.value;
+    const validationSchema = Yup.object({
+        email: Yup.string()
+            .email("Digite um email válido!")
+            .required("Campo obrigatório."),
+        password: Yup.string()
+            .min(6, "A senha deve ter no minímo 6 caracteres!")
+            .required("Campo obrigatório.")
+    });
 
-        signUp(email, password, () => {
-            if (message) {
-                setWarn(true);
-                setLoad(false);
-            }
-        });
+    const formik = useFormik({
+        initialValues: {email: "", password: ""},
+        validationSchema,
+        onSubmit: ({email, password}) => {
+            signUp(email, password, () => {
+                if (message) setWarn(true);
+            });
+        }
+    });
 
-    }, [signUp, message]);
+    const {errors, touched} = formik;
 
     return (
         <>
             <h4>Cadastro</h4>
-            {load && <h6>carregando...</h6>}
-            <form onSubmit={onSubmit} style={{width: "40vw"}}>
-                <Input lblName="Email" inputRef={emailRef} type="email"/>
-                <Input lblName="Senha" inputRef={passwordRef} type="password"/>
-                <input type="submit" value="Cadastrar-se" className="btn btn-primary"/>
+            <form onSubmit={formik.handleSubmit} style={{width: "40vw"}}>
+                <Input name="email" type="email" {...formik.getFieldProps("email")} touched={touched['email']}
+                    error={errors['email']}/>
+                <Input name="senha" type="password" {...formik.getFieldProps("password")} touched={touched['password']}
+                    error={errors['password']}/>
+                <Button value="Cadastrar-se"/>
             </form>
             {warn && <div className={`alert alert-info`}>
                 {message}
