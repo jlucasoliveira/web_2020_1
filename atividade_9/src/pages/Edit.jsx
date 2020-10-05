@@ -39,9 +39,9 @@ export default ({match:{params:{id}}, history}) => {
       <h3>Editar disciplina</h3>
       {loading && <h4>Carregando...</h4>}
       <form onSubmit={submitCallback}>
-        <Input lblName="Nome" inputRef={nomeInputRef}/>
-        <Input lblName="Curso" inputRef={cursoInputRef}/>
-        <Input lblName="Capacidade" inputRef={capacidadeInputRef} type="number" min="0" step="1"/>
+        <Input name="Nome" ref={nomeInputRef}/>
+        <Input name="Curso" ref={cursoInputRef}/>
+        <Input name="Capacidade" ref={capacidadeInputRef} type="number" min="0" step="1"/>
         <input type="submit" value="Editar" className="btn btn-primary"/>
       </form>
     </>
