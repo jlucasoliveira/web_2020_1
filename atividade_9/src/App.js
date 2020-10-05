@@ -2,14 +2,17 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Link, Switch, Route }
         from 'react-router-dom';
+import {connect} from 'react-redux';
 
 import Home from './pages/Home';
 import Create from './pages/Create';
 import List from './pages/List';
 import Edit from './pages/Edit';
 import Delete from './pages/Delete';
+import SignIn from './pages/SignIn';
+import SignUp from './pages/SignUp';
 
-function App() {
+function App({user}) {
   const appName = "Disciplina CRUD";
   return (
     <Router>
@@ -22,17 +25,26 @@ function App() {
                 <Link to={'/'} className="nav-link">Home</Link>
               </li>
               <li className="nav-item">
-                <Link to={'/create'} className="nav-link">Create</Link>
+                <Link to={'/create'} className="nav-link">Criar</Link>
               </li>
               <li className="nav-item">
-                <Link to={'/list'} className="nav-link">List</Link>
+                <Link to={'/list'} className="nav-link">Listar</Link>
+              </li>
+              <li className="nav-item">
+                <Link to={'/signin'} className="nav-link">Logar</Link>
+              </li>
+              <li className="nav-item">
+                <Link to={'/signup'} className="nav-link">Cadastrar-se</Link>
               </li>
             </ul>
+            {user?.email}
           </div>
         </nav>
         <h2>{appName}</h2>
         <Switch>
           <Route exact path='/' component={Home}/>
+          <Route path='/signup' component={SignUp}/>
+          <Route path='/signin' component={SignIn}/>
           <Route path='/create' component={Create}/>
           <Route path='/edit/:id' component={Edit}/>
           <Route path='/list' component={List}/>
@@ -43,4 +55,6 @@ function App() {
   );
 }
 
-export default App;
+export default connect((state) => ({
+  user: state.AuthReducer.user
+}))(App);

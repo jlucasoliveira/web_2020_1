@@ -1,9 +1,11 @@
 import Firebase from '../utils/Firebase';
 
+const Firestone = Firebase.firestore();
+
 export default {
     async list(callback) {
         let disciplinas = [];
-        Firebase.collection('disciplinas')
+        Firestone.collection('disciplinas')
         .onSnapshot(async (query) => {
             query.forEach((doc) => {
                 const id = doc.id;
@@ -15,22 +17,22 @@ export default {
     },
 
     retrieve(id, callback) {
-        Firebase.collection('disciplinas')
+        Firestone.collection('disciplinas')
         .doc(id).get().then((doc) => callback(doc.data()));
     },
 
     create(disciplina, callback) {
-        Firebase.collection('disciplinas').add(disciplina)
+        Firestone.collection('disciplinas').add(disciplina)
         .then(()=> callback(true)).catch(() => callback(false));
     },
 
     edit(id, disciplina, callback) {
-        Firebase.collection('disciplinas').doc(id)
+        Firestone.collection('disciplinas').doc(id)
         .set(disciplina).then(() => callback(true)).catch(() => callback(false));
     },
 
     delete(id, callback) {
-        Firebase.collection('disciplinas').doc(id).delete()
+        Firestone.collection('disciplinas').doc(id).delete()
         .then(() => callback(true)).catch(() => callback(false));
     }
 
