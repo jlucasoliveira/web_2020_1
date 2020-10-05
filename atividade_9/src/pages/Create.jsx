@@ -1,7 +1,10 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-import Input from '../components/Input';
 import {useFormik} from 'formik';
+
+import Input from '../components/Input';
+import Button from '../components/Button';
+
+import { connect } from 'react-redux';
 import DisciplinaService from '../services/DisciplinaService';
 
 const Create = ({history, auth, verified}) => {
@@ -45,16 +48,10 @@ const Create = ({history, auth, verified}) => {
     <>
       <h3>Criar Disciplina</h3>
       <form onSubmit={formik.handleSubmit}>
-        <Input name="nome" value={formik.values.nome} error={formik.errors.nome} onChange={formik.handleChange}
-        onBlur={formik.handleBlur} touched={formik.touched.nome}/>
-        <Input name="curso" value={formik.values.curso} error={formik.errors.curso} onChange={formik.handleChange}
-          onBlur={formik.handleBlur} touched={formik.touched.curso}/>
-        <Input name="capacidade" value={formik.values.capacidade} type="number"step="1"
-          error={formik.errors.capacidade} onChange={formik.handleChange} onBlur={formik.handleBlur}
-          touched={formik.touched.capacidade}/>
-        <div className="form-group">
-          <input type="submit" className="btn btn-primary" value="Criar"/>
-        </div>
+        <Input name="nome" formik={formik} />
+        <Input name="curso" formik={formik} />
+        <Input name="capacidade" type="number" step="1" formik={formik} />
+        <Button value="Criar" />
       </form>
     </>:
     <div className="alert alert-warning">

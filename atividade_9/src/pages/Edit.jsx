@@ -1,48 +1,65 @@
-import React, {useState, useRef, useEffect, useCallback} from 'react';
+import React, {useState, useEffect} from 'react';
+import {useFormik} from 'formik';
+import Button from '../components/Button';
 import Input from '../components/Input';
+
 import DisciplinaService from '../services/DisciplinaService';
 
 export default ({match:{params:{id}}, history}) => {
-  const [loading, setLoading] = useState(true);
-  const nomeInputRef = useRef("");
-  const cursoInputRef = useRef("");
-  const capacidadeInputRef = useRef(0);
+  const [load, setLoad] = useState(true); 
+  
+  const validate = ({nome, curso, capacidade}) => {
+    const errors = {};
+    if (!nome)
+      errors.nome = "Este campo é obrigatório";
+    else if (nome.length > 30)
+      errors.nome = "Dever ter no máximo 30 caracteres.";
+    
+    if (!curso) 
+      errors.curso = "Este campo é obrigatório";
+    else if (curso.length > 20)
+      errors.curso = "Dever ter no máximo 20 caracteres.";
+    
+    if (!capacidade)
+      errors.capacidade = "Este campo é obrigatório";
+    else if (capacidade < 5)
+      errors.capacidade = "Deve haver no mínimo 5 pessoas.";
+
+    return errors;
+  };
+
+  const formik = useFormik({
+    initialValues: {nome: "", curso: "", capacidade: 0},
+    validate,
+    onSubmit: ({nome, curso, capacidade}) => {
+      DisciplinaService.edit(id, {nome, curso, capacidade}, (res) => {
+        res?alert("Atualizado com sucesso!"):alert("Ocorreu um erro!");
+        history.push('/list');
+      });
+    }
+  });
   
   useEffect(() => {
     DisciplinaService.retrieve(id, ({nome, curso, capacidade}) => {
-      if (nome && curso && capacidade) {
-        nomeInputRef.current.value = nome;
-        cursoInputRef.current.value = curso;
-        capacidadeInputRef.current.value = capacidade;
-      } else {
+      if (nome && curso && capacidade)
+        formik.setValues({nome, curso, capacidade});
+      else {
         alert(`id ${id} não encontrada!`);
         history.push('/list');
       }
-      setLoading(false);
+      setLoad(false);
     });
-  }, [id, history]);
-
-  const submitCallback = useCallback(async (e) => {
-    e.preventDefault();
-    const nome = nomeInputRef.current?.value;
-    const curso = cursoInputRef.current?.value;
-    const capacidade = capacidadeInputRef.current?.value;
-    
-    DisciplinaService.edit(id, {nome, curso, capacidade}, (res) => {
-      res?alert("Atualizado com sucesso!"):alert("Ocorreu um erro!");
-      history.push('/list');
-    });
-  }, [id, history]);
+  }, [id, history, formik]);
 
   return (
     <>
       <h3>Editar disciplina</h3>
-      {loading && <h4>Carregando...</h4>}
-      <form onSubmit={submitCallback}>
-        <Input name="Nome" ref={nomeInputRef}/>
-        <Input name="Curso" ref={cursoInputRef}/>
-        <Input name="Capacidade" ref={capacidadeInputRef} type="number" min="0" step="1"/>
-        <input type="submit" value="Editar" className="btn btn-primary"/>
+      {load && <h4>Carregando...</h4>}
+      <form onSubmit={formik.handleSubmit}>
+        <Input name="nome" formik={formik} />
+        <Input name="curso" formik={formik} />
+        <Input name="capacidade" type="number" step="1" formik={formik} />
+        <Button value="Editar" />
       </form>
     </>
   );
