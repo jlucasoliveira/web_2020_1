@@ -14,7 +14,7 @@ const List = ({auth, history, verified}) => {
       return;
     }
     DisciplinaService.list((disciplinas) => {setDisciplinas(disciplinas); setLoading(false)});
-  }, [history, auth]);
+  }, []);
 
   const montarLinhas = () => disciplinas.map((disciplina, i) => <TableRow key={i} {...disciplina} verified={verified}/>);
   
